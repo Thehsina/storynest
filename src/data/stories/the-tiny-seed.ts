@@ -1,0 +1,112 @@
+import type { Story } from '../../types'
+
+export const theTinySeed: Story = {
+  id: 'the-tiny-seed',
+  title: 'The Tiny Seed',
+  subtitle: 'Patience in a patch of soil',
+  author: 'StoryNest',
+  categoryId: 'nature',
+  coverClassName: 'from-lime-400 via-green-500 to-emerald-700',
+  readingTimeMinutes: 5,
+  ageRange: '3–6',
+  summary:
+    'A small seed waits underground until rain, sun, and time help it become something wonderful.',
+  tags: ['garden', 'growing', 'spring'],
+  pages: [
+    {
+      id: 'tiny-seed-1',
+      pageNumber: 1,
+      illustrationAlt: 'A seed resting in dark cozy soil',
+      text: 'Deep in the garden soil, a tiny seed curled up like a sleeping comma. Above ground, children ran and laughed, but the seed heard only a faint hum of roots and worms at work.',
+      narrationAudio: '/audio/tiny-seed/page-1.mp3',
+      interactiveObjects: [
+        {
+          id: 'seed-1',
+          label: 'Tiny Seed',
+          hint: 'Tap the tiny seed to glow in the soil!',
+          x: 50,
+          y: 65,
+          position: { x: 50, y: 65 },
+          animationType: 'glow',
+          sound: 'chime',
+        },
+      ],
+    },
+    {
+      id: 'tiny-seed-2',
+      pageNumber: 2,
+      illustrationAlt: 'Raindrops falling on a garden bed',
+      text: 'One spring night, rain tapped the earth like friendly fingers. "Drink slowly," the old oak\'s roots whispered. The seed sipped and swelled with hope.',
+      narrationAudio: '/audio/tiny-seed/page-2.mp3',
+      interactiveObjects: [
+        {
+          id: 'raindrop',
+          label: 'Spring Raindrop',
+          hint: 'Tap raindrop to hop down!',
+          x: 30,
+          y: 20,
+          position: { x: 30, y: 20 },
+          animationType: 'hop',
+          sound: 'pop',
+        },
+      ],
+    },
+    {
+      id: 'tiny-seed-3',
+      pageNumber: 3,
+      illustrationAlt: 'A green sprout breaking through soil',
+      text: 'Morning sun warmed the ground. The seed pushed a green tip upward, surprised by how much strength lived inside something so small.',
+      narrationAudio: '/audio/tiny-seed/page-3.mp3',
+      interactiveObjects: [
+        {
+          id: 'sprout-3',
+          label: 'Green Sprout',
+          hint: 'Tap the sprout to lift upward!',
+          x: 50,
+          y: 50,
+          position: { x: 50, y: 50 },
+          animationType: 'lift',
+          sound: 'chime',
+        },
+      ],
+    },
+    {
+      id: 'tiny-seed-4',
+      pageNumber: 4,
+      illustrationAlt: 'A sunflower facing the sky',
+      text: 'Weeks passed. Leaves unfolded, a stem grew sturdy, and at last a golden sunflower turned its face to the sky. Bees visited like guests at a party.',
+      narrationAudio: '/audio/tiny-seed/page-4.mp3',
+      interactiveObjects: [
+        {
+          id: 'sunflower-4',
+          label: 'Golden Sunflower',
+          hint: 'Tap sunflower to spin toward the sun!',
+          x: 50,
+          y: 40,
+          position: { x: 50, y: 40 },
+          animationType: 'rotate',
+          sound: 'whir',
+        },
+      ],
+    },
+    {
+      id: 'tiny-seed-5',
+      pageNumber: 5,
+      illustrationAlt: 'Children planting new seeds beside the flower',
+      text: 'The children planted new seeds nearby, whispering, "Your turn next." The tiny seed, now a tall flower, swayed in the breeze—proof that quiet waiting can bloom loud and bright.',
+      narrationAudio: '/audio/tiny-seed/page-5.mp3',
+      interactiveObjects: [
+        {
+          id: 'flower-5',
+          label: 'Tall Sunflower',
+          hint: 'Tap to wave in the breeze!',
+          x: 50,
+          y: 35,
+          position: { x: 50, y: 35 },
+          animationType: 'wave',
+          sound: 'hello',
+        },
+      ],
+    },
+  ],
+}

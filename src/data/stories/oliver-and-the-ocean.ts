@@ -1,0 +1,112 @@
+import type { Story } from '../../types'
+
+export const oliverAndTheOcean: Story = {
+  id: 'oliver-and-the-ocean',
+  title: 'Oliver and the Ocean',
+  subtitle: 'Shells, secrets, and the tide',
+  author: 'StoryNest',
+  categoryId: 'nature',
+  coverClassName: 'from-cyan-400 via-teal-500 to-blue-700',
+  readingTimeMinutes: 6,
+  ageRange: '4–7',
+  summary:
+    'Oliver visits the shore with his grandpa and learns how the ocean listens, answers, and keeps its gentle rhythm.',
+  tags: ['beach', 'ocean', 'family'],
+  pages: [
+    {
+      id: 'oliver-ocean-1',
+      pageNumber: 1,
+      illustrationAlt: 'Oliver and Grandpa walking on a beach at sunrise',
+      text: 'Oliver and Grandpa walked barefoot on the sand while the sun painted the waves gold. "The ocean is awake," Grandpa said, "but it speaks softly in the morning."',
+      narrationAudio: '/audio/oliver-ocean/page-1.mp3',
+      interactiveObjects: [
+        {
+          id: 'sun-1',
+          label: 'Morning Sun',
+          hint: 'Tap the sun to rotate warmth!',
+          x: 80,
+          y: 20,
+          position: { x: 80, y: 20 },
+          animationType: 'rotate',
+          sound: 'whir',
+        },
+      ],
+    },
+    {
+      id: 'oliver-ocean-2',
+      pageNumber: 2,
+      illustrationAlt: 'Oliver holding a spiral shell to his ear',
+      text: 'Oliver picked up a spiral shell and listened. He heard not just the sea, but his own heartbeat, steady and curious.',
+      narrationAudio: '/audio/oliver-ocean/page-2.mp3',
+      interactiveObjects: [
+        {
+          id: 'shell-2',
+          label: 'Spiral Seashell',
+          hint: 'Tap to listen to the ocean chime!',
+          x: 45,
+          y: 60,
+          position: { x: 45, y: 60 },
+          animationType: 'glow',
+          sound: 'chime',
+        },
+      ],
+    },
+    {
+      id: 'oliver-ocean-3',
+      pageNumber: 3,
+      illustrationAlt: 'Tiny crabs scuttling near tide pools',
+      text: 'In a tide pool, shy crabs marched sideways like a tiny parade. Oliver crouched low and waited. When he was still, the pool showed him stars, anemones, and a world in miniature.',
+      narrationAudio: '/audio/oliver-ocean/page-3.mp3',
+      interactiveObjects: [
+        {
+          id: 'crab-3',
+          label: 'Shy Crab',
+          hint: 'Tap the crab to hop sideways!',
+          x: 35,
+          y: 68,
+          position: { x: 35, y: 68 },
+          animationType: 'hop',
+          sound: 'boing',
+        },
+      ],
+    },
+    {
+      id: 'oliver-ocean-4',
+      pageNumber: 4,
+      illustrationAlt: 'Oliver writing a message in the sand',
+      text: 'Oliver drew a big heart in the sand. A wave rolled in and smoothed the edges, leaving the heart softer than before. "The ocean edits with kindness," Grandpa laughed.',
+      narrationAudio: '/audio/oliver-ocean/page-4.mp3',
+      interactiveObjects: [
+        {
+          id: 'wave-4',
+          label: 'Gentle Wave',
+          hint: 'Tap the wave to float gently!',
+          x: 65,
+          y: 52,
+          position: { x: 65, y: 52 },
+          animationType: 'move',
+          sound: 'whoosh',
+        },
+      ],
+    },
+    {
+      id: 'oliver-ocean-5',
+      pageNumber: 5,
+      illustrationAlt: 'Oliver waving goodbye to the sea',
+      text: 'Before they left, Oliver promised to return the shells and only take memories. The ocean hushed the shore with one long, calm breath, as if saying, "I\'ll be here."',
+      narrationAudio: '/audio/oliver-ocean/page-5.mp3',
+      interactiveObjects: [
+        {
+          id: 'oliver-5',
+          label: 'Oliver',
+          hint: 'Tap Oliver to wave goodbye to the sea!',
+          x: 30,
+          y: 60,
+          position: { x: 30, y: 60 },
+          animationType: 'wave',
+          sound: 'hello',
+        },
+      ],
+    },
+  ],
+}
