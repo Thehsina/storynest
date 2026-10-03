@@ -17,9 +17,10 @@ export type InteractiveAnimationType =
   | 'open'
   | 'fly'
   | 'flap'
-  | 'hop'
   | 'lift'
   | string
+
+export type ParticleType = 'sparkles' | 'stars' | 'hearts' | 'water' | 'petals' | 'glow'
 
 export interface InteractiveObject {
   id: string

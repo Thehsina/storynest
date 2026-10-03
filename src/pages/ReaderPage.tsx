@@ -142,7 +142,7 @@ export function ReaderPage() {
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return
     const deltaX = touchStartX.current - touchEndX.current
-    const minSwipeDistance = 50
+    const minSwipeDistance = 40
 
     if (deltaX > minSwipeDistance) {
       handleNextPage()
@@ -180,16 +180,16 @@ export function ReaderPage() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className={`fixed inset-0 z-50 w-screen h-screen min-h-screen bg-gradient-to-br ${bgGradient} text-slate-100 select-none flex flex-col justify-between overflow-hidden font-sans touch-pan-y`}
-      style={{ width: '100vw', height: '100vh', minHeight: '100vh' }}
+      className={`fixed inset-0 z-50 w-screen h-[100dvh] min-h-[100dvh] max-h-[100dvh] bg-gradient-to-br ${bgGradient} text-slate-100 select-none flex flex-col justify-between overflow-hidden font-sans touch-pan-y`}
+      style={{ width: '100vw', height: '100dvh' }}
     >
       {/* Dynamic Ambient Background Glow */}
       <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(circle_at_50%_40%,rgba(251,191,36,0.15),transparent_70%)]" />
 
-      {/* Reader Top Header Bar */}
+      {/* Reader Top Header Bar with Sleek Progress Bar */}
       <ReaderHeader
         story={story}
-        currentPageNumber={currentPageIndex + 1}
+        currentPageIndex={currentPageIndex}
         totalPages={story.pages.length}
         isMuted={isMuted}
         onToggleMute={handleToggleMute}
@@ -201,30 +201,26 @@ export function ReaderPage() {
         {/* Invisible Left & Right Click Navigation Tap Zones (Desktop/Tablet) */}
         {!isFinished && (
           <>
-            {/* Left Tap Zone */}
             <div
               onClick={handlePrevPage}
-              className={`absolute top-0 left-0 w-1/4 h-full z-10 cursor-pointer ${
+              className={`hidden md:block absolute top-0 left-0 w-1/4 h-full z-10 cursor-pointer ${
                 isFirstPage ? 'pointer-events-none' : ''
               }`}
               title="Previous page"
               aria-hidden
             />
-
-            {/* Right Tap Zone */}
             <div
               onClick={handleNextPage}
-              className="absolute top-0 right-0 w-1/4 h-full z-10 cursor-pointer"
+              className="hidden md:block absolute top-0 right-0 w-1/4 h-full z-10 cursor-pointer"
               title="Next page"
               aria-hidden
             />
           </>
         )}
 
-        {/* Visible Floating Friendly Side Navigation Arrows */}
+        {/* Visible Desktop Side Navigation Buttons */}
         {!isFinished && (
           <>
-            {/* Floating Left Arrow (Previous) */}
             {!isFirstPage && (
               <motion.button
                 type="button"
@@ -236,13 +232,12 @@ export function ReaderPage() {
                 whileTap={{ scale: 0.9 }}
                 aria-label="Previous page"
                 title="Previous page"
-                className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-slate-900/80 hover:bg-slate-800 text-amber-300 border-2 border-amber-400/40 shadow-[0_0_20px_rgba(251,191,36,0.3)] backdrop-blur-md cursor-pointer transition-colors focus:outline-none focus:ring-4 focus:ring-amber-400"
+                className="hidden md:flex absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 items-center justify-center min-w-[48px] min-h-[48px] w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-slate-900/80 hover:bg-slate-800 text-amber-300 border-2 border-amber-400/40 shadow-[0_0_20px_rgba(251,191,36,0.3)] backdrop-blur-md cursor-pointer transition-colors focus:outline-none focus:ring-4 focus:ring-amber-400"
               >
-                <ArrowLeft className="w-6 h-6 sm:w-7 sm:h-7" aria-hidden />
+                <ArrowLeft className="w-6 h-6 lg:w-7 lg:h-7" aria-hidden />
               </motion.button>
             )}
 
-            {/* Floating Right Arrow (Next) */}
             <motion.button
               type="button"
               onClick={(e) => {
@@ -253,9 +248,9 @@ export function ReaderPage() {
               whileTap={{ scale: 0.9 }}
               aria-label="Next page"
               title="Next page"
-              className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold border-2 border-amber-300 shadow-[0_0_24px_rgba(251,191,36,0.6)] cursor-pointer transition-colors focus:outline-none focus:ring-4 focus:ring-amber-300"
+              className="hidden md:flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 z-30 items-center justify-center min-w-[48px] min-h-[48px] w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold border-2 border-amber-300 shadow-[0_0_24px_rgba(251,191,36,0.6)] cursor-pointer transition-colors focus:outline-none focus:ring-4 focus:ring-amber-300"
             >
-              <ArrowRight className="w-6 h-6 sm:w-7 sm:h-7 text-slate-950" aria-hidden />
+              <ArrowRight className="w-6 h-6 lg:w-7 lg:h-7 text-slate-950" aria-hidden />
             </motion.button>
           </>
         )}
@@ -271,15 +266,43 @@ export function ReaderPage() {
             onExit={handleExit}
           />
         ) : (
-          <AnimatePresence mode="wait" custom={direction}>
-            <ReaderPageContent
-              key={currentPage.id}
-              storyId={story.id}
-              page={currentPage}
-              direction={direction}
-              isMuted={isMuted}
-            />
-          </AnimatePresence>
+          <div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
+            <AnimatePresence mode="wait" custom={direction}>
+              <ReaderPageContent
+                key={currentPage.id}
+                storyId={story.id}
+                page={currentPage}
+                direction={direction}
+                isMuted={isMuted}
+              />
+            </AnimatePresence>
+
+            {/* Mobile Bottom Navigation Bar (Visible on phones/mobile screens) */}
+            <div className="flex md:hidden items-center justify-between px-6 py-2 z-30 bg-slate-950/80 backdrop-blur-md border-t border-slate-800/60">
+              <button
+                type="button"
+                onClick={handlePrevPage}
+                disabled={isFirstPage}
+                className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-bold min-w-[44px] min-h-[44px] transition-all ${
+                  isFirstPage
+                    ? 'opacity-30 text-slate-500 cursor-not-allowed'
+                    : 'bg-slate-800 text-amber-300 border border-amber-400/30 active:scale-95'
+                }`}
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Previous</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNextPage}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full text-xs font-extrabold bg-amber-400 active:scale-95 text-slate-950 min-w-[44px] min-h-[44px] shadow-md"
+              >
+                <span>Next</span>
+                <ArrowRight className="w-4 h-4 text-slate-950" />
+              </button>
+            </div>
+          </div>
         )}
       </main>
     </div>

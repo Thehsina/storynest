@@ -20,9 +20,35 @@ export function ReaderNavigation({
 }: ReaderNavigationProps) {
   const isFirstPage = currentPageIndex === 0
   const isLastPage = currentPageIndex === totalPages - 1
+  const progressPercent = Math.round(
+    ((currentPageIndex + 1) / totalPages) * 100,
+  )
+
   return (
     <footer className="relative z-40 w-full px-3 py-2.5 sm:px-6 sm:py-3.5 bg-slate-950/85 backdrop-blur-xl border-t border-slate-800/80 text-slate-100 shadow-[0_-8px_30px_rgba(0,0,0,0.5)]">
       <div className="max-w-5xl mx-auto flex flex-col gap-2">
+        {/* Subtle Progress Bar */}
+        <div className="w-full max-w-md mx-auto flex items-center gap-3 px-2">
+          <div
+            className="h-1.5 flex-1 rounded-full bg-slate-800/90 overflow-hidden ring-1 ring-amber-400/20 shadow-inner"
+            role="progressbar"
+            aria-valuenow={currentPageIndex + 1}
+            aria-valuemin={1}
+            aria-valuemax={totalPages}
+            aria-label={`Page progress: ${currentPageIndex + 1} of ${totalPages}`}
+          >
+            <motion.div
+              className="h-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-300 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.8)]"
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPercent}%` }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            />
+          </div>
+          <span className="text-[11px] font-bold text-amber-300 min-w-[36px] text-right tracking-wide">
+            {progressPercent}%
+          </span>
+        </div>
+
         {/* Navigation Bar Row */}
         <div className="flex items-center justify-between w-full gap-2 pt-0.5">
           {/* Previous Button */}

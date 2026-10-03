@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Button } from '../ui/Button'
 
 export function HomeHero() {
@@ -19,7 +19,7 @@ export function HomeHero() {
           className="space-y-8"
         >
           <p className="inline-flex items-center gap-2 rounded-full border border-[#eadcf8] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#7d6b9a] shadow-sm backdrop-blur-sm">
-            <Sparkles className="h-3.5 w-3.5" aria-hidden />
+            <img src="/logo-mark.png" alt="" className="h-6 w-6 object-contain" />
             StoryNest originals
           </p>
 

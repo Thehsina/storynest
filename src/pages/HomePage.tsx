@@ -3,6 +3,8 @@ import { StoryCard } from '../components/story/StoryCard'
 import { Button } from '../components/ui/Button'
 import { stories } from '../data/stories'
 
+const PORTFOLIO_URL = 'YOUR_PORTFOLIO_URL'
+
 export function HomePage() {
   const scrollToStories = () => {
     const section = document.getElementById('choose-a-story')
@@ -15,7 +17,7 @@ export function HomePage() {
     <div className="space-y-16 pb-12">
       {/* Simple Hero Section */}
       <section className="relative overflow-hidden pt-6 pb-8 sm:pt-10 sm:pb-12 text-center max-w-4xl mx-auto px-4">
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#eadcf8] bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#7d6b9a] shadow-sm backdrop-blur-sm">
             <Sparkles className="h-3.5 w-3.5 text-amber-500" aria-hidden />
             Original Children&apos;s Stories
@@ -29,7 +31,27 @@ export function HomePage() {
             Read, listen, and explore magical stories.
           </p>
 
-          <div className="pt-2 flex justify-center">
+          {/* Storybook Signature Creator Credit */}
+          <div className="pt-0.5 text-sm sm:text-base font-medium text-[#7d6b9a] tracking-wide">
+            <span>by </span>
+            <a
+              href={PORTFOLIO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Thehsina Ibrahim's personal portfolio (opens in a new tab)"
+              className="group inline-flex items-center gap-1 font-semibold text-[#4e3c6c] hover:text-[#2a2238] transition-colors hover:underline decoration-amber-400 decoration-2 underline-offset-4 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 rounded-sm min-h-[44px] sm:min-h-0 py-1"
+            >
+              <span>Thehsina Ibrahim</span>
+              <span
+                className="inline-block transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-amber-500 font-bold"
+                aria-hidden
+              >
+                ↗
+              </span>
+            </a>
+          </div>
+
+          <div className="pt-3 flex justify-center">
             <Button
               onClick={scrollToStories}
               size="lg"
