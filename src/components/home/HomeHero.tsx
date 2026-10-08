@@ -24,7 +24,7 @@ export function HomeHero() {
           </p>
 
           <div className="space-y-5">
-            <h1 className="font-display max-w-xl text-4xl leading-[1.05] font-semibold tracking-tight text-[#2a2238] sm:text-5xl lg:text-6xl">
+            <h1 className="font-display max-w-xl text-4xl leading-[1.2] pb-1 font-semibold tracking-tight text-[#2a2238] sm:text-5xl lg:text-6xl">
               Big stories for little imaginations.
             </h1>
             <p className="max-w-lg text-lg leading-relaxed text-[#5c536c] sm:text-xl">

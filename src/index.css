@@ -23,6 +23,11 @@
   }
 }
 
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
 /* Custom Attractive Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 8px;

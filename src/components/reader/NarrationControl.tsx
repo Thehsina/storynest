@@ -8,6 +8,7 @@ type NarrationControlProps = {
   textToRead?: string
   onStateChange?: (isPlaying: boolean) => void
   className?: string
+  isActive?: boolean
 }
 
 export function NarrationControl({
@@ -15,6 +16,7 @@ export function NarrationControl({
   textToRead,
   onStateChange,
   className = '',
+  isActive = true,
 }: NarrationControlProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -24,6 +26,19 @@ export function NarrationControl({
   const [isUsingSpeechFallback, setIsUsingSpeechFallback] = useState(false)
 
   const [prevAudioSrc, setPrevAudioSrc] = useState(audioSrc)
+
+  // Stop audio immediately when component becomes inactive
+  useEffect(() => {
+    if (!isActive) {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+      }
+      stopSpeech()
+      setIsPlaying(false)
+      if (onStateChange) onStateChange(false)
+    }
+  }, [isActive, onStateChange])
 
   // Reset state when audioSrc prop changes
   if (audioSrc !== prevAudioSrc) {

@@ -47,7 +47,7 @@ export function ReaderHeader({
           <h1 className="font-display text-sm sm:text-base md:text-lg font-bold text-amber-200 truncate max-w-[180px] sm:max-w-md tracking-wide">
             {story.title}
           </h1>
-          <span className="text-[11px] sm:text-xs font-medium text-amber-300/80 tracking-wider">
+          <span className="hidden md:inline-block text-[11px] sm:text-xs font-medium text-amber-300/80 tracking-wider">
             Page {currentPageIndex + 1} of {totalPages}
           </span>
         </div>
@@ -99,9 +99,9 @@ export function ReaderHeader({
         </div>
       </div>
 
-      {/* Sleek Reading Progress Bar */}
+      {/* Sleek Reading Progress Bar (Visible on Desktop/Tablet) */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-1 bg-slate-900/80 overflow-hidden"
+        className="hidden md:block absolute bottom-0 left-0 right-0 h-1 bg-slate-900/80 overflow-hidden"
         role="progressbar"
         aria-valuenow={progressPercent}
         aria-valuemin={0}

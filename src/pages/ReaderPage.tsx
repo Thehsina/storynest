@@ -3,8 +3,11 @@ import { ArrowLeft, ArrowRight, BookOpenCheck, Sparkles, Trophy } from 'lucide-r
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { EmptyState } from '../components/common/EmptyState'
+import { InteractiveObjectOverlay } from '../components/reader/InteractiveObjectOverlay'
+import { NarrationControl } from '../components/reader/NarrationControl'
 import { ReaderHeader } from '../components/reader/ReaderHeader'
 import { ReaderPageContent } from '../components/reader/ReaderPageContent'
+import { StoryIllustration } from '../components/story/StoryIllustration'
 import { Button } from '../components/ui/Button'
 import { saveReadingProgress } from '../hooks/useContinueReading'
 import { useStory } from '../hooks/useStory'
@@ -39,7 +42,11 @@ export function ReaderPage() {
   const [isMuted, setIsMuted] = useState(false)
   const [isFinished, setIsFinished] = useState(false)
 
-  // Touch swipe tracking
+  // Mobile scroll container ref and page section refs
+  const mobileContainerRef = useRef<HTMLDivElement | null>(null)
+  const pageRefs = useRef<(HTMLElement | null)[]>([])
+
+  // Touch swipe tracking (for desktop horizontal swipe)
   const touchStartX = useRef<number | null>(null)
   const touchEndX = useRef<number | null>(null)
 
@@ -56,6 +63,53 @@ export function ReaderPage() {
       stopSpeech()
     }
   }, [])
+
+  // Mobile Intersection Observer for active page detection
+  useEffect(() => {
+    const container = mobileContainerRef.current
+    if (!container || !story) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let mostVisibleIdx: number | null = null
+        let maxRatio = 0
+
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+            const indexAttr = entry.target.getAttribute('data-page-index')
+            if (indexAttr !== null) {
+              const idx = parseInt(indexAttr, 10)
+              if (!isNaN(idx)) {
+                maxRatio = entry.intersectionRatio
+                mostVisibleIdx = idx
+              }
+            }
+          }
+        })
+
+        if (mostVisibleIdx !== null) {
+          if (mostVisibleIdx < story.pages.length) {
+            setCurrentPageIndex(mostVisibleIdx)
+            setIsFinished(false)
+          } else {
+            setIsFinished(true)
+          }
+        }
+      },
+      {
+        root: container,
+        threshold: [0.2, 0.4, 0.6, 0.8],
+      },
+    )
+
+    pageRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref)
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [story])
 
   const handleNextPage = useCallback(() => {
     if (!story) return
@@ -129,7 +183,7 @@ export function ReaderPage() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleNextPage, handlePrevPage, handleExit, handleToggleMute])
 
-  // Mobile Touch Swipe Handlers
+  // Desktop Touch Swipe Handlers
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX
     touchEndX.current = null
@@ -180,13 +234,13 @@ export function ReaderPage() {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className={`fixed inset-0 z-50 w-screen h-[100dvh] min-h-[100dvh] max-h-[100dvh] bg-gradient-to-br ${bgGradient} text-slate-100 select-none flex flex-col justify-between overflow-hidden font-sans touch-pan-y`}
+      className={`fixed inset-0 z-50 w-screen h-[100dvh] min-h-[100dvh] max-h-[100dvh] bg-gradient-to-br ${bgGradient} text-slate-100 select-none flex flex-col justify-between overflow-hidden font-sans`}
       style={{ width: '100vw', height: '100dvh' }}
     >
       {/* Dynamic Ambient Background Glow */}
       <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(circle_at_50%_40%,rgba(251,191,36,0.15),transparent_70%)]" />
 
-      {/* Reader Top Header Bar with Sleek Progress Bar */}
+      {/* Reader Top Header Bar */}
       <ReaderHeader
         story={story}
         currentPageIndex={currentPageIndex}
@@ -255,55 +309,119 @@ export function ReaderPage() {
           </>
         )}
 
-        {/* Main Content Area */}
-        {isFinished ? (
-          <StoryCompletionCard
-            story={story}
-            onReplay={() => {
-              setIsFinished(false)
-              setCurrentPageIndex(0)
-            }}
-            onExit={handleExit}
-          />
-        ) : (
-          <div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
-            <AnimatePresence mode="wait" custom={direction}>
-              <ReaderPageContent
-                key={currentPage.id}
-                storyId={story.id}
-                page={currentPage}
-                direction={direction}
-                isMuted={isMuted}
-              />
-            </AnimatePresence>
-
-            {/* Mobile Bottom Navigation Bar (Visible on phones/mobile screens) */}
-            <div className="flex md:hidden items-center justify-between px-6 py-2 z-30 bg-slate-950/80 backdrop-blur-md border-t border-slate-800/60">
-              <button
-                type="button"
-                onClick={handlePrevPage}
-                disabled={isFirstPage}
-                className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-bold min-w-[44px] min-h-[44px] transition-all ${
-                  isFirstPage
-                    ? 'opacity-30 text-slate-500 cursor-not-allowed'
-                    : 'bg-slate-800 text-amber-300 border border-amber-400/30 active:scale-95'
-                }`}
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>Previous</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleNextPage}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full text-xs font-extrabold bg-amber-400 active:scale-95 text-slate-950 min-w-[44px] min-h-[44px] shadow-md"
-              >
-                <span>Next</span>
-                <ArrowRight className="w-4 h-4 text-slate-950" />
-              </button>
+        {/* DESKTOP / TABLET VIEW (Side-by-side paginated reader) */}
+        <div className="hidden md:flex relative w-full h-full flex-col justify-between overflow-hidden">
+          {isFinished ? (
+            <StoryCompletionCard
+              story={story}
+              onReplay={() => {
+                setIsFinished(false)
+                setCurrentPageIndex(0)
+              }}
+              onExit={handleExit}
+            />
+          ) : (
+            <div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
+              <AnimatePresence mode="wait" custom={direction}>
+                <ReaderPageContent
+                  key={currentPage.id}
+                  storyId={story.id}
+                  page={currentPage}
+                  direction={direction}
+                  isMuted={isMuted}
+                />
+              </AnimatePresence>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* MOBILE VIEW (Vertical scroll-based picture book experience) */}
+        <div
+          ref={mobileContainerRef}
+          className="flex md:hidden flex-col w-full h-full overflow-y-auto snap-y snap-mandatory touch-pan-y scroll-smooth story-reader-container z-20"
+          style={{ scrollSnapType: 'y mandatory' }}
+        >
+          {story.pages.map((page, index) => {
+            const isActive = currentPageIndex === index && !isFinished
+            const hasInteractiveObjects =
+              page.interactiveObjects && page.interactiveObjects.length > 0
+
+            return (
+              <section
+                key={page.id}
+                ref={(el) => {
+                  pageRefs.current[index] = el
+                }}
+                data-page-index={index}
+                className="w-full min-h-[100dvh] h-auto flex flex-col items-center justify-between p-4 sm:p-6 snap-start relative box-border py-6 border-b border-slate-800/20 shrink-0"
+                style={{ scrollSnapAlign: 'start' }}
+              >
+                {/* Top Illustration (~45-55% of mobile viewport height) */}
+                <div className="relative w-full h-[48vh] min-h-[220px] max-h-[52vh] flex flex-col items-center justify-center min-h-0 rounded-2xl overflow-hidden shrink-0">
+                  <StoryIllustration
+                    storyId={story.id}
+                    pageNumber={page.pageNumber}
+                    className="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)]"
+                  />
+                  <InteractiveObjectOverlay
+                    interactiveObjects={page.interactiveObjects}
+                    isMuted={isMuted}
+                  />
+                </div>
+
+                {/* Interactive Discovery Prompt if present */}
+                {hasInteractiveObjects && (
+                  <div className="my-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-200 text-xs font-semibold backdrop-blur-md shrink-0">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" aria-hidden />
+                    <span>Tap the picture to explore!</span>
+                  </div>
+                )}
+
+                {/* Story Text (Auto height, complete text, never clipped) */}
+                <div className="w-full max-w-prose text-center px-3 my-3 shrink-0">
+                  <p
+                    className="font-serif text-slate-100 font-normal tracking-wide drop-shadow-md leading-[1.55]"
+                    style={{ fontSize: 'clamp(1.15rem, 4.5vw, 1.4rem)' }}
+                  >
+                    {page.text}
+                  </p>
+                </div>
+
+                {/* Compact Narration Control */}
+                <div className="mt-auto mb-2 shrink-0">
+                  <NarrationControl
+                    audioSrc={page.narrationAudio}
+                    textToRead={page.text}
+                    isActive={isActive}
+                    className="shadow-lg border-amber-400/30 bg-slate-900/80"
+                  />
+                </div>
+              </section>
+            )
+          })}
+
+          {/* Mobile Story Completion Section */}
+          <section
+            ref={(el) => {
+              pageRefs.current[story.pages.length] = el
+            }}
+            data-page-index={story.pages.length}
+            className="w-full min-h-[100dvh] h-auto flex flex-col items-center justify-center p-6 snap-start relative box-border py-8 shrink-0"
+            style={{ scrollSnapAlign: 'start' }}
+          >
+            <StoryCompletionCard
+              story={story}
+              onReplay={() => {
+                setIsFinished(false)
+                setCurrentPageIndex(0)
+                if (mobileContainerRef.current) {
+                  mobileContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+                }
+              }}
+              onExit={handleExit}
+            />
+          </section>
+        </div>
       </main>
     </div>
   )
